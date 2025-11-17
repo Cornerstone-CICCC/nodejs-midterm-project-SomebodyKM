@@ -1,0 +1,147 @@
+<header>
+  <div class="header-wrapper">
+    <div class="logo">
+      <a href="/" class="desktop-logo">GameVault</a>
+      <a href="/" class="mobile-logo">GV</a>
+    </div>
+    <div class="profile-logout">
+      <a id="profile-btn"><i class="fa-solid fa-circle-user"></i></a>
+      <a id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></a
+      >
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: center;
+    background-color: #2e2f44;
+    border-bottom: 1px solid #3c3a4f;
+  }
+
+  .header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem;
+    max-width: 1440px;
+    flex: 1;
+  }
+
+  .logo a {
+    font-family: "Orbitron", sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #ffffff;
+    transition: all 0.5s linear;
+  }
+
+  .logo a:hover {
+    text-shadow: 0 0 10px #ffffff;
+  }
+
+  .desktop-logo {
+    display: none;
+  }
+
+  .profile-logout {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .profile-logout a {
+    font-size: 2rem;
+    text-decoration: none;
+  }
+
+  .profile-logout a:first-child {
+    color: #ffffff;
+    transition: all 0.5s linear;
+  }
+
+  .profile-logout a:first-child:hover {
+    color: #00b4d7;
+    text-shadow: 0 0 10px #ffffff;
+  }
+
+  .profile-logout a:last-child {
+    display: none;
+    color: #a7969c;
+    transition: all 0.5s linear;
+  }
+
+  .profile-logout a:last-child:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px #ffffff;
+  }
+
+  @media screen and (min-width: 768px) {
+    .desktop-logo {
+      display: block;
+    }
+
+    .mobile-logo {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const profileBtn = document.getElementById(
+      "profile-btn"
+    ) as HTMLAnchorElement;
+    const logoutBtn = document.getElementById(
+      "logout-btn"
+    ) as HTMLAnchorElement;
+
+    // Check login
+    let isLoggedIn = false;
+    const checkAccount = async () => {
+      try {
+        const res = await fetch("http://localhost:3500/users/check-auth", {
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          isLoggedIn = true;
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    await checkAccount();
+
+    // If not logged in
+    if (!isLoggedIn) {
+      logoutBtn.style.display = "none";
+
+      profileBtn.addEventListener("click", () => {
+        window.location.href = "/login";
+      });
+
+      return;
+    }
+
+    // If logged in
+    logoutBtn.style.display = "block";
+
+    profileBtn.addEventListener("click", () => {
+      window.location.href = "/";
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      const res = await fetch("http://localhost:3500/users/logout", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        window.location.href = "/login";
+      }
+    });
+  });
+</script>

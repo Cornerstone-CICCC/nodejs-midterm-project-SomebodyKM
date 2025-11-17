@@ -1,0 +1,457 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const res = await fetch("http://localhost:3500/games");
+const data = await res.json();
+const games = data.games;
+---
+
+<Layout title="GameVault">
+  <main>
+    <div class="wrapper">
+      <div class="search-wishlist">
+        <form id="search-bar">
+          <input
+            type="text"
+            id="search-input"
+            name="search-input"
+            placeholder="Search games or genres..."
+            autocomplete="off"
+          />
+          <button type="submit" class="search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+        <a href="/wishlist">Wishlist</a>
+      </div>
+
+      <h2>Game Explorer</h2>
+
+      <div class="gamelist">
+        {
+          games.map((game: any) => (
+            <div class="card" data-id={game.id}>
+              <div class="game-img">
+                <img src={game.background_image} alt={game.name} />
+              </div>
+              <div class="game-info">
+                <div class="title-btn">
+                  <h3>{game.name}</h3>
+                  <button class="add-btn" data-id={game.id}>
+                    <i class="fa-regular fa-heart" />
+                  </button>
+                </div>
+                <div class="rating-genres">
+                  <p>
+                    <i class="fa-solid fa-star" /> {game.rating}
+                  </p>
+                  <p>{game.genres.map((g: any) => g.name).join(" | ")}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    background-color: #1f1e2e;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex: 1;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 3rem;
+    max-width: 1440px;
+  }
+
+  .search-wishlist {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 1rem;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1440px;
+    margin: auto;
+  }
+
+  #search-bar {
+    position: relative;
+    align-self: center;
+    width: 100%;
+    transition: all 0.3s linear;
+  }
+
+  #search-input {
+    background-color: #666573;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    padding-left: 40px;
+    outline: none;
+    caret-color: #ffffff;
+    width: 100%;
+  }
+
+  #search-bar:active {
+    transform: scale(0.95);
+  }
+
+  #search-bar:focus {
+    border: 2px solid grey;
+  }
+
+  #search-input::placeholder {
+    color: #d2d2d2;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .search-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    color: #d2d2d2;
+    border: none;
+    background-color: transparent;
+  }
+
+  .search-wishlist a {
+    background-color: #00b4d7;
+    color: #ffffff;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    width: 96px;
+    text-decoration: none;
+    align-self: center;
+    box-shadow: rgba(0, 180, 216, 0.4) 0px 0px 12px;
+    transition: all 0.5s linear;
+  }
+
+  .search-wishlist a:hover {
+    background-color: #00829c;
+    cursor: pointer;
+  }
+
+  h2 {
+    font-family: "Orbitron", sans-serif;
+    font-weight: 400;
+    color: #ffffff;
+    align-self: center;
+    font-size: 2rem;
+  }
+
+  .gamelist {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin: auto;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px;
+    width: 300px;
+    border: 1px solid #3c3a4f;
+    background-color: #2e2f44;
+    transition: all 0.5s linear;
+  }
+
+  .card:hover {
+    box-shadow: 0px 0px 20px 5px #3c3a4f;
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+
+  .game-img {
+    width: 300px;
+    height: 168px;
+    aspect-ratio: 4 / 2;
+  }
+
+  .game-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .game-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .title-btn {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .title-btn h3 {
+    font-family: "Orbitron", sans-serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: #ffffff;
+  }
+
+  .add-btn {
+    border: none;
+    background-color: transparent;
+    width: 25px;
+    height: 25px;
+    font-size: 1rem;
+    color: #ffffff;
+    transition: all 0.5s linear;
+  }
+
+  .add-btn i .fa-solid {
+    color: #00b4d7;
+  }
+
+  .add-btn:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+
+  .rating-genres {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .rating-genres p:first-child {
+    color: #ffffff;
+    width: 100px;
+  }
+
+  .rating-genres p i {
+    color: #00b4d7;
+  }
+
+  .rating-genres p:last-child {
+    color: #a7969c;
+    text-align: end;
+  }
+
+  @media screen and (min-width: 768px) {
+    .search-wishlist {
+      flex-direction: row;
+    }
+
+    .gamelist {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .gamelist {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  @media screen and (min-width: 1440px) {
+    .gamelist {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  const searchForm = document.getElementById("search-bar") as HTMLElement;
+  const searchInput = document.getElementById(
+    "search-input"
+  ) as HTMLInputElement;
+  const gameList = document.querySelector(".gamelist") as HTMLDivElement;
+
+  // Search
+  searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const query = searchInput.value.toLowerCase();
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach((card: any) => {
+      if (!card) return;
+      const title = card.querySelector("h3");
+      if (!title) return;
+      const gameTitle = title.textContent.toLowerCase();
+      const genres = card.querySelector(".rating-genres p:last-child");
+      if (!genres) return;
+      const genre = genres.textContent.toLowerCase();
+
+      card.style.display =
+        gameTitle.includes(query) || genre.includes(query) ? "flex" : "none";
+    });
+  });
+
+  // Handle click card event
+  gameList?.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+
+    const card = target.closest(".card") as HTMLElement;
+    if (!card) return;
+
+    if (target.closest(".add-btn")) return;
+
+    const id = card.dataset.id;
+    window.location.href = `/gamedetail?id=${id}`;
+  });
+
+  // Check login
+  let isLoggedIn = false;
+  let faveArr: any[] = [];
+  const checkAccount = async () => {
+    try {
+      const res = await fetch("http://localhost:3500/users/check-auth", {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        isLoggedIn = true;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  await checkAccount();
+
+  if (isLoggedIn) {
+    const res = await fetch("http://localhost:3500/games/favorites/list", {
+      credentials: "include",
+    });
+    const data = await res.json();
+    faveArr = data.favorites;
+  }
+
+  // Update icon
+  const updateHeartIcons = () => {
+    const buttons = document.querySelectorAll(".add-btn");
+
+    buttons.forEach((btn: any) => {
+      const gameId = btn.dataset.id;
+      const icon = btn.querySelector("i");
+
+      if (!isLoggedIn) {
+        // not logged in → always regular
+        icon.classList.remove("fa-solid");
+        icon.classList.add("fa-regular");
+        return;
+      }
+
+      const isFave = faveArr.some((f: any) => f.gameId == gameId);
+
+      if (isFave) {
+        icon.classList.remove("fa-regular");
+        icon.classList.add("fa-solid");
+      } else {
+        icon.classList.remove("fa-solid");
+        icon.classList.add("fa-regular");
+      }
+    });
+  };
+
+  updateHeartIcons();
+
+  // Toggle fave
+  gameList?.addEventListener("click", async (e) => {
+    const target = e.target as HTMLElement;
+
+    const addBtn = target.closest(".add-btn") as HTMLElement;
+    if (!addBtn) return;
+
+    if (!isLoggedIn) {
+      alert("Please log in to add to wishlist.");
+      return;
+    }
+
+    const gameId = addBtn.dataset.id;
+    const icon = addBtn.querySelector("i");
+
+    const resF = await fetch("http://localhost:3500/games/favorites/list", {
+      credentials: "include",
+    });
+    faveArr = (await resF.json()).favorites;
+
+    const fave = faveArr.find((f: any) => f.gameId == gameId);
+    const faveId = fave?.id;
+
+    // Add fave
+    const getGames = async () => {
+      try {
+        const res = await fetch("http://localhost:3500/games");
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const allGames = await getGames();
+
+    const game = allGames.games.find((g: any) => g.id == gameId);
+
+    if (fave) {
+      const res = await fetch(
+        `http://localhost:3500/games/favorites/${faveId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (res.ok) {
+        icon?.classList.remove("fa-solid");
+        icon?.classList.add("fa-regular");
+      }
+    } else {
+      const res = await fetch("http://localhost:3500/games/favorites", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(game),
+      });
+
+      if (res.ok) {
+        icon?.classList.remove("fa-regular");
+        icon?.classList.add("fa-solid");
+      }
+    }
+
+    // Remove fave
+    // if (fave) {
+    //   const res = await fetch(
+    //     `http://localhost:3500/games/favorites/${faveId}`,
+    //     {
+    //       method: "DELETE",
+    //       credentials: "include",
+    //     }
+    //   );
+
+    //   if (res.ok) {
+    //     icon?.classList.remove("fa-solid");
+    //     icon?.classList.add("fa-regular");
+    //   }
+
+    //   return;
+    // }
+  });
+</script>
